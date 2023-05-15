@@ -10,12 +10,23 @@ import type { RouterOutputs } from "~/utils/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { LoadingPage } from "~/components/loading";
+import { useState } from "react";
 
 dayjs.extend(relativeTime);
 
 const CreatePostWizard = () => {
   const { user } = useUser();
+  const [input, setInput] = useState("");
   // console.log("user::: ", user);
+  const ctx = api.useContext();
+
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: () => {
+      setInput("");
+      void ctx.posts.getAll.invalidate();
+    },
+  });
+  // mutate({ content: "Hello World!" });
 
   if (!user) return null;
   return (
@@ -24,7 +35,12 @@ const CreatePostWizard = () => {
       <input
         placeholder="Type something..."
         className="grow bg-transparent outline-none"
+        value={input}
+        type="text"
+        onChange={(e) => setInput(e.target.value)}
+        disabled={isPosting}
       />
+      <button onClick={() => mutate({ content: input })}>Post</button>
     </div>
   );
 };
@@ -33,7 +49,7 @@ type PostWithAuthor = RouterOutputs["posts"]["getAll"][number];
 
 const PostView = (props: PostWithAuthor) => {
   const { post, author } = props;
-  console.log(props);
+  // console.log(props);
   return (
     <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
       <Image
@@ -46,7 +62,7 @@ const PostView = (props: PostWithAuthor) => {
 
       <div className="flex flex-col">
         <div className="flex gap-2 text-slate-300">
-          <span>{`@${author?.username}`}</span>
+          <span>{author?.emailAddresses?.emailAddress}</span>
           <span className="font-thin">{`${dayjs(
             post.createdAt
           ).fromNow()}`}</span>
@@ -59,6 +75,7 @@ const PostView = (props: PostWithAuthor) => {
 
 const Feed = () => {
   const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
+
   if (postsLoading) return <LoadingPage />;
   if (!data) return <div>Something went wrong</div>;
   return (
@@ -71,7 +88,7 @@ const Feed = () => {
 };
 
 const Home: NextPage = () => {
-  const { user, isLoaded: userLoaded, isSignedIn: userSignedIn } = useUser();
+  const { isLoaded: userLoaded, isSignedIn: userSignedIn } = useUser();
   const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
   if (!userLoaded && !postsLoading) return <div />;
   if (postsLoading) return <LoadingPage />;

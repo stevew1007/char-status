@@ -12,6 +12,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -90,7 +91,9 @@ const PostView = (props: PostWithAuthor) => {
 
       <div className="flex flex-col">
         <div className="flex gap-2 text-slate-300">
-          <span>{author?.emailAddresses?.emailAddress}</span>
+          <Link href={`/@${author?.emailAddresses?.emailAddress || 404}`}>
+            <span>{author?.emailAddresses?.emailAddress}</span>
+          </Link>
           <span className="font-thin">{`${dayjs(
             post.createdAt
           ).fromNow()}`}</span>

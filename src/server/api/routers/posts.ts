@@ -41,13 +41,6 @@ export const postsRouter = createTRPCRouter({
           code: "INTERNAL_SERVER_ERROR",
           message: "Author for post not found",
         });
-      // if (!author.username) {
-      //   // user the ExternalUsername
-      //   throw new TRPCError({
-      //     code: "INTERNAL_SERVER_ERROR",
-      //     message: `Author has no GitHub Account: ${author.id}`,
-      //   });
-      // }
       return {
         post,
         author: users.find((user) => user.id === post.authorId),

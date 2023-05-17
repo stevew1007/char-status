@@ -64,7 +64,7 @@ export const postsRouter = createTRPCRouter({
     });
   }),
   create: privateProcedure
-    .input(z.object({ content: z.string().min(1).max(280) }))
+    .input(z.object({ content: z.string().min(3).max(280) }))
     .mutation(async ({ ctx, input }) => {
       const authorId = ctx.userId;
       const { success } = await ratelimit.limit(authorId);

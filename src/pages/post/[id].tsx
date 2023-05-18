@@ -5,9 +5,9 @@ const SinglePostPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Profile</title>
+        <title>Post</title>
       </Head>
-      <h1>Profile</h1>
+      <h1>Post</h1>
     </>
   );
 };

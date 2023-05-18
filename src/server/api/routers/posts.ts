@@ -12,6 +12,7 @@ import {
 
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
+import { filterUserForClient } from "~/server/helpers/filterUserForClient";
 
 // Create a new ratelimiter, that allows 3 requests per 1 min
 const ratelimit = new Ratelimit({
@@ -25,16 +26,6 @@ const ratelimit = new Ratelimit({
    */
   prefix: "@upstash/ratelimit",
 });
-
-const filterUserForClient = (user: User) => {
-  // console.log("user::: ", user);
-  return {
-    id: user.id,
-    username: user.username,
-    emailAddresses: user.emailAddresses[0],
-    profileImageUrl: user.profileImageUrl,
-  };
-};
 
 export const postsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {

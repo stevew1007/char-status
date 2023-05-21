@@ -33,6 +33,7 @@ const ProfilePage: NextPage<PageProps> = ({ emailAddress }) => {
         <div className="h-[64px]"></div>
         <div className="p-4 text-2xl font-bold">{data.username}</div>
         <div className="w-full border-b border-slate-400" />
+        <ProfileFeed userId={data.id} />
       </PageLayout>
     </>
   );
@@ -44,6 +45,7 @@ import { prisma } from "~/server/db";
 import SuperJSON from "superjson";
 import { PageLayout } from "~/components/layout";
 import Image from "next/image";
+import { ProfileFeed } from "~/components/postview";
 // import { createContext } from "server/context";
 
 export const getStaticProps = async (context: GetStaticPropsContext) => {
